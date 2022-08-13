@@ -1,0 +1,119 @@
+buildscript {
+    repositories {
+        maven { url = 'https://maven.minecraftforge.net' }
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+    }
+}
+
+plugins {
+    id 'com.matthewprenger.cursegradle' version '1.4.0'
+}
+
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+
+version = "1.19.x-1.0.4"
+
+def fileVersion = "1.0.4"
+group = "net.jomcraft.jcplugin"
+
+archivesBaseName = "JCPlugin"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
+
+minecraft {
+    mappings channel: 'official', version: '1.19.1'
+
+	runs {
+        client {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                jcplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                jcplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'jcplugin', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            mods {
+                jcplugin {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
+
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.19.1-42.0.0'
+}
+
+processResources {
+
+	duplicatesStrategy = 'include'
+}
+
+jar {
+	manifest {
+		attributes([
+			"Specification-Title": "JCPlugin",
+			"Specification-Vendor": "Jomcraft Network",
+			"Specification-Version": fileVersion,
+			"Implementation-Title": "JCPlugin",
+			"Implementation-Version": fileVersion,
+			"Implementation-Vendor" : "Jomcraft Network",
+			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+		])
+	}
+}
+
+task sourcesJar(type: Jar) {
+	from sourceSets.main.allSource
+	classifier = 'sources'
+}
+
+task deobfJar(type: Jar) {
+	from sourceSets.main.output
+	classifier = 'deobf'
+}
+
+artifacts {
+	archives jar
+	archives sourcesJar
+	archives deobfJar
+}
+
+jar.finalizedBy('reobfJar')
