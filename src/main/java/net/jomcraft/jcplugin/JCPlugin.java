@@ -26,6 +26,7 @@ import joptsimple.OptionSpecBuilder;
 public class JCPlugin implements ITransformationService {
     
 	public static final Logger log = LogManager.getLogger("JCPlugin Launcher");
+	public static final String VERSION = "2.8.3";
     
     @Override
     public String name() {
