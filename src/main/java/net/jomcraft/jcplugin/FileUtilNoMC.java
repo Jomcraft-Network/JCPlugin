@@ -152,6 +152,8 @@ public class FileUtilNoMC {
 
 		getPrivateJSON();
 
+		getMainJSON();
+
 		if (!privateJson.privateIdentifier.equals(mainJson.generatedBy) && !mainJson.generatedBy.equals("<default>")) {
 			otherCreator = true;
 		}
@@ -232,7 +234,7 @@ public class FileUtilNoMC {
 			Date date = new Date();
 			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-			mainJson = new MainJSON().setVersion("3.0.2").setCreated(formatter.format(date));
+			mainJson = new MainJSON().setVersion("none").setCreated(formatter.format(date));
 
 			// File fileDir = new File(mcDataDir, "config");
 			// for (File file : fileDir.listFiles(fileFilter))
@@ -248,6 +250,8 @@ public class FileUtilNoMC {
 	}
 
 	public static void restoreContentsFirst() throws NullPointerException, IOException, NoSuchAlgorithmException {
+
+		new File(mcDataDir, "config").mkdir();
 
 		initialSetupJSON();
 
@@ -1043,90 +1047,6 @@ public class FileUtilNoMC {
 					}
 				}
 			}
-
-		} catch (Exception e) {
-			JCPlugin.log.log(Level.ERROR, "Error while saving configs: ", e);
-		}
-
-		return ret;
-	}
-
-	public static boolean checkChanged() {
-		boolean ret = false;
-		try {
-
-			InputStream options = getOptionsStream();
-			InputStream optionsOF = getOptionsOFStream();
-			InputStream optionsShaders = getOptionsShadersStream();
-			InputStream optionsJEK = getOptionsJEKStream();
-			InputStream optionsAmecs = getOptionsAmecsStream();
-			InputStream servers = getServersStream();
-
-			String hashO = "";
-			String writtenHashO = "";
-
-			if (options != null) {
-				hashO = fileToHash(options);
-				writtenHashO = mainJson.hashes.get(activeProfile + "/options.txt");
-			}
-
-			String hashOF = "";
-			String writtenHashOF = "";
-
-			if (optionsOF != null) {
-				hashOF = fileToHash(optionsOF);
-				writtenHashOF = mainJson.hashes.get(activeProfile + "/optionsof.txt");
-			}
-
-			String hashShaders = "";
-			String writtenHashShaders = "";
-
-			if (optionsShaders != null) {
-				hashShaders = fileToHash(optionsShaders);
-				writtenHashShaders = mainJson.hashes.get(activeProfile + "/optionsshaders.txt");
-			}
-
-			String hashJEK = "";
-			String writtenHashJEK = "";
-
-			if (optionsJEK != null) {
-				hashJEK = fileToHash(optionsJEK);
-				writtenHashJEK = mainJson.hashes.get(activeProfile + "/options.justenoughkeys.txt");
-			}
-
-			String hashAmecs = "";
-			String writtenHashAmecs = "";
-
-			if (optionsAmecs != null) {
-				hashAmecs = fileToHash(optionsAmecs);
-				writtenHashAmecs = mainJson.hashes.get(activeProfile + "/options.amecsapi.txt");
-			}
-
-			String hashS = "";
-			String writtenHashS = "";
-
-			if (servers != null) {
-				hashS = fileToHash(servers);
-				writtenHashS = mainJson.hashes.get(activeProfile + "/servers.dat");
-			}
-
-			if (mainJson.hashes.containsKey(activeProfile + "/options.txt") && !hashO.equals(writtenHashO)) {
-				ret = true;
-			} else if (mainJson.hashes.containsKey(activeProfile + "/optionsof.txt") && !hashOF.equals(writtenHashOF)) {
-				ret = true;
-			} else if (mainJson.hashes.containsKey(activeProfile + "/optionsshaders.txt") && !hashShaders.equals(writtenHashShaders)) {
-				ret = true;
-			} else if (mainJson.hashes.containsKey(activeProfile + "/options.justenoughkeys.txt") && !hashJEK.equals(writtenHashJEK)) {
-				ret = true;
-			} else if (mainJson.hashes.containsKey(activeProfile + "/options.amecsapi.txt") && !hashAmecs.equals(writtenHashAmecs)) {
-				ret = true;
-			} else if (mainJson.hashes.containsKey(activeProfile + "/servers.dat") && !hashS.equals(writtenHashS)) {
-				ret = true;
-			}
-
-			options.close();
-			File fileO = new File(getMainFolder(), activeProfile + "/options.txt_temp");
-			Files.delete(fileO.toPath());
 
 		} catch (Exception e) {
 			JCPlugin.log.log(Level.ERROR, "Error while saving configs: ", e);

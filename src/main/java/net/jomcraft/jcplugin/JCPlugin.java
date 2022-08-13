@@ -38,7 +38,7 @@ public class JCPlugin implements ITransformationService {
 		try {
 			if (getSideName().equals(Constants.SIDE_CLIENT)) {
 				final Path location = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).get();
-				FileUtilNoMC.mcDataDir = location.toFile();
+				FileUtilNoMC.mcDataDir = location.toFile();// new File(".");//
 				FileUtilNoMC.restoreContentsFirst();
 			}
 		} catch (Exception e) {
