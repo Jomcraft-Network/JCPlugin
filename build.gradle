@@ -15,9 +15,9 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = "1.19.x-2.8.3"
+version = "1.19.x-2.8.4"
 
-def fileVersion = "2.8.3"
+def fileVersion = "2.8.4"
 group = "net.jomcraft.jcplugin"
 
 archivesBaseName = "JCPlugin"
@@ -73,6 +73,7 @@ minecraft {
             }
         }
     }
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
 sourceSets.main.resources { srcDir 'src/generated/resources' }
