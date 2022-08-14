@@ -1,5 +1,8 @@
 package net.jomcraft.jcplugin;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Path;
@@ -12,6 +15,8 @@ import java.util.Set;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.util.Constants;
@@ -28,6 +33,8 @@ public class JCPlugin implements ITransformationService {
 
 	public static final Logger log = LogManager.getLogger("JCPlugin Launcher");
 
+	public static boolean checksSuccessful = false;
+
 	@Override
 	public String name() {
 		return "jcplugin";
@@ -37,9 +44,48 @@ public class JCPlugin implements ITransformationService {
 	public void initialize(IEnvironment environment) {
 		try {
 			if (getSideName().equals(Constants.SIDE_CLIENT)) {
+
+				String launchTarget = environment.getProperty(IEnvironment.Keys.LAUNCHTARGET.get()).get();
+
 				final Path location = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).get();
 				FileUtilNoMC.mcDataDir = location.toFile();// new File(".");//
-				FileUtilNoMC.restoreContentsFirst();
+
+				if (!launchTarget.contains("dev")) {
+
+					File mods = new File(FileUtilNoMC.mcDataDir, "mods");
+
+					for (File mod : mods.listFiles()) {
+						if (mod.getName().toLowerCase().contains("defaultsettings")) {
+							JarFile jar = new JarFile(mod);
+
+							ZipEntry toml = jar.getEntry("META-INF/mods.toml");
+							if (toml != null) {
+
+								BufferedReader result = new BufferedReader(new InputStreamReader(jar.getInputStream(toml)));
+
+								String readerLine;
+								while ((readerLine = result.readLine()) != null) {
+									if (readerLine.contains("modId=\"defaultsettings\"")) {
+										checksSuccessful = true;
+										break;
+									}
+								}
+
+								result.close();
+							}
+
+							jar.close();
+						}
+					}
+				} else {
+					log.info("Loading DefaultSettings Core plugin in development environment");
+					checksSuccessful = true;
+				}
+				if (checksSuccessful) {
+					FileUtilNoMC.restoreContentsFirst();
+				} else {
+					log.error("Could not find DefaultSettings, not going to do anything! Shutting down...");
+				}
 			}
 		} catch (Exception e) {
 			log.error(e);
