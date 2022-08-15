@@ -1,4 +1,4 @@
-[![JCPlugin](https://github.com/Jomcraft-Network/JCPlugin/actions/workflows/build.yml/badge.svg?branch=1.19.x)](https://github.com/Jomcraft-Network/JCPlugin/actions/workflows/build.yml)
+[![JCPlugin](https://github.com/Jomcraft-Network/JCPlugin/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/Jomcraft-Network/JCPlugin/actions/workflows/build.yml)
 
 ### JCPlugin
 
