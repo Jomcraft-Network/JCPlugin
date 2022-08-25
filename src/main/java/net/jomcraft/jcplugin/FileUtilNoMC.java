@@ -113,38 +113,14 @@ public class FileUtilNoMC {
 			ff = FileUtilNoMC.fileFilter;
 		}
 
-		if (state == 1 || state == 2) {
-			// List<String> list = new ArrayList<String>(mainJson.activeConfigs);
-			// mainJson.activeConfigs.stream().filter(file ->
-			// file.toLowerCase().startsWith(query.toLowerCase()) && new File(mcDataDir +
-			// "/config", file).exists()).forEach(file -> removeFromLists(list, file));
-			// mainJson.activeConfigs = list;
-
-		} else if (state == 0) {
-			// File fileDir = new File(mcDataDir, "config");
-			// for (File file : fileDir.listFiles(ff))
-			// getMainJSON().activeConfigs.add(file.getName());
-
-		}
-
 		mainJson.save();
 	}
 
 	public static void setActive(String name, boolean active) {
-		// if (!active)
-		// mainJson.activeConfigs.remove(name);
-		// else if (!mainJson.activeConfigs.contains(name))
-		// mainJson.activeConfigs.add(name);
-
 		mainJson.save();
 	}
 
 	public static void switchActive(String name) {
-		// if (mainJson.activeConfigs.contains(name))
-		// mainJson.activeConfigs.remove(name);
-		// else
-		// mainJson.activeConfigs.add(name);
-
 		mainJson.save();
 	}
 
@@ -235,10 +211,6 @@ public class FileUtilNoMC {
 			SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
 			mainJson = new MainJSON().setVersion("none").setCreated(formatter.format(date));
-
-			// File fileDir = new File(mcDataDir, "config");
-			// for (File file : fileDir.listFiles(fileFilter))
-			// mainJson.activeConfigs.add(file.getName());
 
 			mainJson.save();
 		}
@@ -508,113 +480,7 @@ public class FileUtilNoMC {
 				}
 			}
 		}
-		/*
-		 * Collection<File> shared = FileUtils.listFilesAndDirs(new
-		 * File(getMainFolder(), "sharedConfigs/"), TrueFileFilter.INSTANCE,
-		 * TrueFileFilter.INSTANCE); for (File sharedFile : shared) {
-		 * 
-		 * if (sharedFile.getName().equals("ignore.json")) continue; File file = new
-		 * File(mcDataDir, "config"); String name = sharedFile.getName(); File fileInner
-		 * = new File(file, sharedFile.getName()); try {
-		 * 
-		 * File locInDir = new File(getMainFolder(), "sharedConfigs/" + name); if
-		 * (locInDir.isDirectory()) {
-		 * 
-		 * Collection<File> files = FileUtils.listFilesAndDirs(locInDir,
-		 * TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE); for (File filePers :
-		 * files) {
-		 * 
-		 * if (filePers.isDirectory()) continue;
-		 * 
-		 * String relativePath =
-		 * filePers.getPath().substring((mcDataDir.getPath().length()));
-		 * 
-		 * String loc =
-		 * relativePath.split("defaultsettings")[1].substring(1).split("sharedConfigs")[
-		 * 1].substring(1);
-		 * 
-		 * File configLoc = new File(file, loc);
-		 * 
-		 * File newF = new File(getMainFolder(), "sharedConfigs/" + loc); if
-		 * ((!configLoc.exists() || !privateJson.currentHash.
-		 * containsKey("sharedConfigs\\" + loc) || !privateJson.currentHash.get("
-		 * sharedConfigs\\" + loc).equals(mainJson.hashes.get("sharedConfigs\\" + loc)))
-		 * && newF.exists()) { FileUtils.copyFile(newF, configLoc);
-		 * privateJson.currentHash.put("sharedConfigs\\" + loc, mainJson.hashes.get("
-		 * sharedConfigs\\" + loc));
-		 * 
-		 * } }
-		 * 
-		 * } else { if ((!fileInner.exists() || !privateJson.currentHash.
-		 * containsKey("sharedConfigs\\" + name) || !privateJson.currentHash.get("
-		 * sharedConfigs\\" + name).equals(mainJson.hashes.get("sharedConfigs\\" +
-		 * name))) && locInDir.exists()) {
-		 * 
-		 * FileUtils.copyFile(locInDir, fileInner);
-		 * 
-		 * privateJson.currentHash.put("sharedConfigs\\" + name, mainJson.hashes.get("
-		 * sharedConfigs\\" + name));
-		 * 
-		 * } } } catch (IOException e) { if (e instanceof FileNotFoundException) {
-		 * JCPlugin.log.log(Level.DEBUG, "The file no longer exists: ", e); } else {
-		 * JCPlugin.log.log(Level.WARN, "Error while creating hash: ", e); } } }
-		 */
 
-		/*
-		 * 
-		 * for(String name : mainJson.activeConfigs) { File file = new File(mcDataDir,
-		 * "config"); File fileInner = new File(file, name); try {
-		 * 
-		 * File locInDir = new File(getMainFolder(), activeProfile + "/" + name);
-		 * 
-		 * if(locInDir.isDirectory()) {
-		 * 
-		 * Collection<File> files = FileUtils.listFilesAndDirs(locInDir,
-		 * TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE); for(File filePers : files)
-		 * {
-		 * 
-		 * if(filePers.isDirectory()) continue;
-		 * 
-		 * String relativePath =
-		 * filePers.getPath().substring((mcDataDir.getPath().length()));
-		 * 
-		 * 
-		 * String loc =
-		 * relativePath.split("defaultsettings")[1].substring(1).split(activeProfile)[1]
-		 * .substring(1);
-		 * 
-		 * File configLoc = new File(file, loc);
-		 * 
-		 * File newF = new File(getMainFolder(), activeProfile + "/" + loc);
-		 * if((!configLoc.exists() || !privateJson.currentHash.containsKey(activeProfile
-		 * + "/" + loc) || !privateJson.currentHash.get(activeProfile + "/" +
-		 * loc).equals(mainJson.hashes.get(activeProfile + "/" + loc))) &&
-		 * newF.exists()) { FileUtils.copyFile(newF, configLoc);
-		 * 
-		 * privateJson.currentHash.put(activeProfile + "/" + loc,
-		 * mainJson.hashes.get(activeProfile + "/" + loc));
-		 * 
-		 * } }
-		 * 
-		 * }else {
-		 * 
-		 * if((!fileInner.exists() || !privateJson.currentHash.containsKey(activeProfile
-		 * + "/" + name) || !privateJson.currentHash.get(activeProfile + "/" +
-		 * name).equals(mainJson.hashes.get(activeProfile + "/" + name))) &&
-		 * locInDir.exists()) {
-		 * 
-		 * FileUtils.copyFile(locInDir, fileInner);
-		 * 
-		 * privateJson.currentHash.put(activeProfile + "/" + name,
-		 * mainJson.hashes.get(activeProfile + "/" + name));
-		 * 
-		 * } } }catch (IOException e) { if(e instanceof FileNotFoundException) {
-		 * JCPlugin.log.log(Level.DEBUG, "The file no longer exists: ", e);
-		 * if(!otherCreator) toRemove.add(name); }else { JCPlugin.log.log(Level.WARN,
-		 * "Error while creating hash: ", e); } } }
-		 * 
-		 * for(String remove : toRemove) { mainJson.activeConfigs.remove(remove); }
-		 */
 		privateJson.save();
 
 		if (toRemove.size() > 0) {
@@ -856,29 +722,7 @@ public class FileUtilNoMC {
 
 	public static void moveAllConfigs() throws IOException {
 		try {
-
-			/*
-			 * FileUtils.copyDirectory(fileDir, new File(getMainFolder(), activeProfile),
-			 * fileFilterModular); for (File f : fileDir.listFiles(fileFilterModular)) { try
-			 * { if(f.isDirectory()) FileUtils.deleteDirectory(f); else //f.delete() calls
-			 * updates, not appropriate Files.delete(f.toPath()); }catch(IOException e) {
-			 * JCPlugin.log.log(Level.ERROR, "Couldn't move config files: ", e); } }
-			 * for(File file : new File(getMainFolder(), "sharedConfigs").listFiles()) {
-			 * 
-			 * if(!new File(fileDir, file.getName()).exists()) continue; if(new
-			 * File(fileDir, file.getName()).isDirectory()) FileUtils.deleteDirectory(new
-			 * File(fileDir, file.getName())); else //f.delete() calls updates, not
-			 * appropriate Files.delete(new File(fileDir, file.getName()).toPath()); }
-			 */
-
 			FileUtils.copyDirectory(new File(getMainFolder(), activeProfile), new File(mcDataDir, "config"), fileFilterAnti);
-			/*
-			 * for (File f : new File(getMainFolder(),
-			 * activeProfile).listFiles(fileFilterAnti)) { try { if(f.isDirectory())
-			 * FileUtils.deleteDirectory(f); else //f.delete() calls updates, not
-			 * appropriate Files.delete(f.toPath()); }catch(IOException e) {
-			 * JCPlugin.log.log(Level.ERROR, "Couldn't move config files: ", e); } }
-			 */
 
 		} catch (IOException e) {
 			throw e;
@@ -1092,22 +936,6 @@ public class FileUtilNoMC {
 			}
 		}
 
-		/*
-		 * Collection<File> shared = FileUtils.listFilesAndDirs(new
-		 * File(getMainFolder(), "sharedConfigs"), TrueFileFilter.INSTANCE,
-		 * TrueFileFilter.INSTANCE); for (File sharedFile : shared) { if
-		 * (!sharedFile.isDirectory() && !sharedFile.getName().equals("ignore.json")) {
-		 * String relativePath =
-		 * sharedFile.getPath().substring((mcDataDir.getPath().length())); String
-		 * pathString = relativePath.split("defaultsettings")[1].substring(1); if
-		 * (!updateExisting && mainJson.hashes.containsKey(pathString)) {
-		 * 
-		 * } else { mainJson.hashes.put(pathString, fileToHash(new
-		 * FileInputStream(sharedFile))); }
-		 * 
-		 * } }
-		 */
-
 		mainJson.save();
 
 	}
@@ -1127,7 +955,6 @@ public class FileUtilNoMC {
 
 	public static class IgnoreJSON {
 
-		// Not used at the moment
 		public static transient final long serialVersionUID = 2349872L;
 		public ArrayList<String> ignore = new ArrayList<String>();
 		public transient File location;

@@ -15,9 +15,9 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 
-version = "1.19.x-2.8.6"
+version = "1.18.x-1.19.x-2.8.7"
 
-def fileVersion = "2.8.6"
+def fileVersion = "2.8.7"
 group = "net.jomcraft.jcplugin"
 
 archivesBaseName = "JCPlugin"
