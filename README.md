@@ -4,7 +4,9 @@
 
 ---
 
-JCPlugin is a Core Plugin Loader for DefaultSettings Forge mod created by the Jomcraft Network development team..
+JCPlugin is a Core Plugin Loader for the DefaultSettings Forge mod, created by the Jomcraft Network development team. Official downloads and further information can be found on our [curseforge page](https://www.curseforge.com/minecraft/mc-mods/jcplugin).
+
+This dependency is required since DefaultSettings 2.8.6 (alpha)!
 
 ##### License
 
