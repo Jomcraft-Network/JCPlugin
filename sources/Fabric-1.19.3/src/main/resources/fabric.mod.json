@@ -1,0 +1,26 @@
+{
+	"schemaVersion": 1,
+	"id": "jcplugin",
+	"version": "${version}",
+	"name": "JCPlugin",
+	"description": "JCPlugin Mod by JomcraftNetwork for DefaultSettings on Fabric",
+	"authors": [
+		"PT400C - Jomcraft Network"
+	],
+	"contact": {
+		"homepage": "https://curseforge.com/minecraft/mc-mods/jcplugin",
+		"sources": "https://github.com/Jomcraft-Network/JCPlugin",
+		"issues": "https://github.com/Jomcraft-Network/JCPlugin/issues"
+	},
+	"license": "Apache License 2.0",
+	"environment": "client",
+	"entrypoints": {
+		"client": []
+	},
+	"mixins": [],
+	"depends": {
+		"fabric": "*",
+		"fabricloader": "*",
+		"minecraft": ">=1.17.1"
+	}
+}

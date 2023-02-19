@@ -1,0 +1,22 @@
+pluginManagement {
+	repositories {
+		gradlePluginPortal()
+		maven {
+			name = 'Fabric'
+			url = 'https://maven.fabricmc.net/'
+		}
+		maven {
+			url = 'https://repo.spongepowered.org/repository/maven-public/'
+		}
+	}
+}
+
+rootProject.name = name
+
+include("Core")
+
+include("Fabric-1.19.3")
+project(":Fabric-1.19.3").projectDir = new File("./sources/Fabric-1.19.3")
+
+include("Forge-1.19.3")
+project(":Forge-1.19.3").projectDir = new File("./sources/Forge-1.19.3")

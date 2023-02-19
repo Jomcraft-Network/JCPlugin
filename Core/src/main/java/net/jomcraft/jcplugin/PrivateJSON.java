@@ -19,7 +19,7 @@ public class PrivateJSON {
 		try (FileWriter writer = new FileWriter(new File(FileUtilNoMC.mcDataDir, "ds_private_storage.json"))) {
 			FileUtilNoMC.gson.toJson(this, writer);
 		} catch (IOException e) {
-			JCPlugin.log.log(Level.ERROR, "Exception at processing startup: ", e);
+			JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
 		}
 	}
 }

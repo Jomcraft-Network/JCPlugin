@@ -148,7 +148,7 @@ public class FileUtilNoMC {
 				ignoreJson.location = location;
 
 			} catch (Exception e) {
-				JCPlugin.log.log(Level.ERROR, "Exception at processing startup: ", e);
+				JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
 			}
 
 		} else {
@@ -174,7 +174,7 @@ public class FileUtilNoMC {
 				privateJson.save();
 
 			} catch (Exception e) {
-				JCPlugin.log.log(Level.ERROR, "Exception at processing startup: ", e);
+				JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
 			}
 
 		} else {
@@ -198,7 +198,7 @@ public class FileUtilNoMC {
 				mainJson = gson.fromJson(reader, MainJSON.class);
 
 			} catch (Exception e) {
-				JCPlugin.log.log(Level.ERROR, "Exception at processing configs: ", e);
+				JCLogger.log.log(Level.ERROR, "Exception at processing configs: ", e);
 				if (e instanceof JsonSyntaxException) {
 					mainFile.renameTo(new File(mcDataDir, "config/defaultsettings_malformed.json"));
 					getMainJSON();
@@ -308,7 +308,7 @@ public class FileUtilNoMC {
 						try {
 							Files.delete(t);
 						} catch (IOException e) {
-							JCPlugin.log.log(Level.ERROR, "Exception while processing profiles: ", e);
+							JCLogger.log.log(Level.ERROR, "Exception while processing profiles: ", e);
 						}
 					});
 				}
@@ -326,7 +326,7 @@ public class FileUtilNoMC {
 						Files.copy(path, zos);
 						zos.closeEntry();
 					} catch (IOException e) {
-						JCPlugin.log.log(Level.ERROR, "Exception while processing profiles: ", e);
+						JCLogger.log.log(Level.ERROR, "Exception while processing profiles: ", e);
 					}
 				});
 			}
@@ -387,7 +387,7 @@ public class FileUtilNoMC {
 			try {
 				FileUtils.copyDirectory(getMainFolder(), new File(getMainFolder(), "Default"), ffm);
 			} catch (IOException e) {
-				JCPlugin.log.log(Level.ERROR, "Couldn't move config files: ", e);
+				JCLogger.log.log(Level.ERROR, "Couldn't move config files: ", e);
 			}
 
 			for (File f : getMainFolder().listFiles(ffm)) {
@@ -397,7 +397,7 @@ public class FileUtilNoMC {
 					else
 						Files.delete(f.toPath());
 				} catch (IOException e) {
-					JCPlugin.log.log(Level.ERROR, "Couldn't move config files: ", e);
+					JCLogger.log.log(Level.ERROR, "Couldn't move config files: ", e);
 				}
 			}
 
@@ -698,7 +698,7 @@ public class FileUtilNoMC {
 			try {
 				FileUtils.copyFile(file, new File(mcDataDir, file.getName()));
 			} catch (IOException e) {
-				JCPlugin.log.log(Level.ERROR, "Process the files: ", e);
+				JCLogger.log.log(Level.ERROR, "Process the files: ", e);
 			}
 		});
 
@@ -712,7 +712,7 @@ public class FileUtilNoMC {
 			try {
 				privateJson.currentHash.put(activeProfile + "/" + file.getName(), fileToHash(new FileInputStream(file)));
 			} catch (IOException e) {
-				JCPlugin.log.log(Level.ERROR, "Process the files: ", e);
+				JCLogger.log.log(Level.ERROR, "Process the files: ", e);
 			}
 		});
 
@@ -737,9 +737,9 @@ public class FileUtilNoMC {
 			if (file.exists())
 				FileUtils.copyFile(file, new File(mcDataDir, "servers.dat"));
 			else
-				JCPlugin.log.log(Level.WARN, "Couldn't restore the server config as it's not included");
+				JCLogger.log.log(Level.WARN, "Couldn't restore the server config as it's not included");
 		} catch (IOException e) {
-			JCPlugin.log.log(Level.ERROR, "Couldn't restore the server config: ", e);
+			JCLogger.log.log(Level.ERROR, "Couldn't restore the server config: ", e);
 		}
 	}
 
@@ -863,7 +863,7 @@ public class FileUtilNoMC {
 			}
 
 		} catch (Exception e) {
-			JCPlugin.log.log(Level.ERROR, "Error while saving configs: ", e);
+			JCLogger.log.log(Level.ERROR, "Error while saving configs: ", e);
 		}
 
 		return true;
@@ -893,7 +893,7 @@ public class FileUtilNoMC {
 			}
 
 		} catch (Exception e) {
-			JCPlugin.log.log(Level.ERROR, "Error while saving configs: ", e);
+			JCLogger.log.log(Level.ERROR, "Error while saving configs: ", e);
 		}
 
 		return ret;
@@ -967,7 +967,7 @@ public class FileUtilNoMC {
 			try (FileWriter writer = new FileWriter(this.location)) {
 				FileUtilNoMC.gson.toJson(this, writer);
 			} catch (IOException e) {
-				JCPlugin.log.log(Level.ERROR, "Exception at processing startup: ", e);
+				JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
 			}
 		}
 	}

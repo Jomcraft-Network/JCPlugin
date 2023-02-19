@@ -45,7 +45,7 @@ public class MainJSON {
 		try (FileWriter writer = new FileWriter(new File(FileUtilNoMC.mcDataDir, "config/defaultsettings.json"))) {
 			FileUtilNoMC.gson.toJson(this, writer);
 		} catch (IOException e) {
-			JCPlugin.log.log(Level.ERROR, "Exception at processing configs: ", e);
+			JCLogger.log.log(Level.ERROR, "Exception at processing configs: ", e);
 		}
 	}
 }

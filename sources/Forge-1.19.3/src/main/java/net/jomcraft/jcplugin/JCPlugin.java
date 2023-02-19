@@ -31,10 +31,6 @@ import joptsimple.OptionSpecBuilder;
 
 public class JCPlugin implements ITransformationService {
 
-	public static final Logger log = LogManager.getLogger("JCPlugin Launcher");
-	
-	public static final String version = "2.8.7";
-
 	public static boolean checksSuccessful = false;
 
 	@Override
@@ -46,7 +42,6 @@ public class JCPlugin implements ITransformationService {
 	public void initialize(IEnvironment environment) {
 		try {
 			if (getSideName().equals(Constants.SIDE_CLIENT)) {
-
 				String launchTarget = environment.getProperty(IEnvironment.Keys.LAUNCHTARGET.get()).get();
 
 				final Path location = environment.getProperty(IEnvironment.Keys.GAMEDIR.get()).get();
@@ -80,17 +75,17 @@ public class JCPlugin implements ITransformationService {
 						}
 					}
 				} else {
-					log.info("Loading DefaultSettings Core plugin in development environment");
+					JCLogger.log.info("Loading DefaultSettings Core plugin in development environment");
 					checksSuccessful = true;
 				}
 				if (checksSuccessful) {
 					FileUtilNoMC.restoreContentsFirst();
 				} else {
-					log.error("Could not find DefaultSettings, not going to do anything! Shutting down...");
+					JCLogger.log.error("Could not find DefaultSettings, not going to do anything! Shutting down...");
 				}
 			}
 		} catch (Exception e) {
-			log.error(e);
+			JCLogger.log.error(e);
 		}
 	}
 
@@ -117,7 +112,7 @@ public class JCPlugin implements ITransformationService {
 					return Constants.SIDE_CLIENT;
 				}
 			} catch (Exception ex) {
-				log.error(ex);
+				JCLogger.log.error(ex);
 				return null;
 			}
 		}
