@@ -20,7 +20,7 @@ jobs:
         uses: gradle/wrapper-validation-action@v1
       - name: Build with Gradle
         run: ./gradlew build copyRelease
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v2
         with:
-          name: 'Test Files'
-          path: build/libs/*.jar
+          name: 'Prebuilt Artifacts'
+          path: build/libs
