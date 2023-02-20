@@ -56,7 +56,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 		mainFile.displayName = "$archivesBaseName-$version"
 		mainFile.changelogType = 'html'
 		mainFile.changelog = file('../../changelog.html')
-		mainFile.addModLoader('Forge')
+		mainFile.addModLoader('Fabric')
 		mainFile.addJavaVersion('Java 8')
 		mainFile.addJavaVersion('Java 16')
 		mainFile.addJavaVersion('Java 17')
