@@ -61,10 +61,10 @@ artifacts {
 }
 
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+	dependsOn "build"
 	if (System.getenv("CURSE_API") != null && !System.getenv("CURSE_API").equals("")) {
-		println "Test $archivesBaseName-$version"
-		//disableVersionDetection()
-		/*apiToken = System.getenv("CURSE_API")
+		disableVersionDetection()
+		apiToken = System.getenv("CURSE_API")
 
 		def mainFile = upload(659192, jar)
 		mainFile.releaseType = 'alpha'
@@ -83,7 +83,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 
 		def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
 		sourcesFile.changelog = file('../../changelog.html')
-		sourcesFile.displayName = "$archivesBaseName-$version-sources"*/
+		sourcesFile.displayName = "$archivesBaseName-$version-sources"
 	}
 }
 
