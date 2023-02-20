@@ -5,15 +5,15 @@ plugins {
 
 archivesBaseName = "${rootProject.name}"
 
-version = "1.17.x-1.19.x-${version}-Fabric"
+version = "1.16.x-1.19.x-${version}-Fabric"
 
 dependencies {
-	minecraft "com.mojang:minecraft:1.19.3"
+	minecraft "com.mojang:minecraft:1.16.5"
 	mappings loom.officialMojangMappings()
 
-	modImplementation "net.fabricmc:fabric-loader:0.14.11"
+	modImplementation "net.fabricmc:fabric-loader:0.11.3"
 
-	modImplementation "net.fabricmc.fabric-api:fabric-api:0.68.1+1.19.3"
+	modImplementation "net.fabricmc.fabric-api:fabric-api:0.34.2+1.16"
 	implementation project(":Core")
 }
 
@@ -29,13 +29,13 @@ loom {
 	runs {
 		client {
 			client()
-			setConfigName("Fabric 1.19.3 Client")
+			setConfigName("Fabric 1.16.5 Client")
 			ideConfigGenerated(true)
 			runDir("./run")
 		}
 		server {
 			server()
-			setConfigName("Fabric 1.19.3 Server")
+			setConfigName("Fabric 1.16.5 Server")
 			ideConfigGenerated(true)
 			runDir("./run")
 		}
@@ -64,6 +64,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
 		mainFile.addGameVersion('1.19.2')
 		mainFile.addGameVersion('1.18.2')
 		mainFile.addGameVersion('1.17.1')
+		mainFile.addGameVersion('1.16.5')
 	}
 }
 

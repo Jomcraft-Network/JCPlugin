@@ -15,8 +15,8 @@ rootProject.name = name
 
 include("Core")
 
-include("Fabric-1.19.3")
-project(":Fabric-1.19.3").projectDir = new File("./sources/Fabric-1.19.3")
+include("Fabric-1.16.5")
+project(":Fabric-1.16.5").projectDir = new File("./sources/Fabric-1.16.5")
 
 include("Forge-1.16.5")
 project(":Forge-1.16.5").projectDir = new File("./sources/Forge-1.16.5")
