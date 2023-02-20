@@ -48,6 +48,20 @@ subprojects {
     //	enabled = false //probably broken
     //}
 
+    jar {
+        manifest {
+            attributes([
+                    "Specification-Title"     : "JCPlugin",
+                    "Specification-Vendor"    : "Jomcraft Network",
+                    "Specification-Version"   : project.version,
+                    "Implementation-Title"    : "JCPlugin",
+                    "Implementation-Version"  : project.version,
+                    "Implementation-Vendor"   : "Jomcraft Network",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
+            ])
+        }
+    }
+
     processResources {
         inputs.property "version", project.version
 

@@ -75,6 +75,16 @@ tasks.withType(JavaCompile) {
     source(project(":Core").sourceSets.main.allSource)
 }
 
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+}
+
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
     if (System.getenv("CURSE_API") != null && !System.getenv("CURSE_API").equals("")) {
         disableVersionDetection()
@@ -94,6 +104,10 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
         mainFile.addGameVersion('1.18.2')
         mainFile.addGameVersion('1.17.1')
         mainFile.addGameVersion('1.16.5')
+
+        def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+        sourcesFile.changelog = file('../../changelog.html')
+        sourcesFile.displayName = "$archivesBaseName-$version-sources"
     }
 }
 
