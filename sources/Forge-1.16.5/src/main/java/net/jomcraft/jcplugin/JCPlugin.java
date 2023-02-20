@@ -17,8 +17,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.spongepowered.asm.util.Constants;
 import cpw.mods.modlauncher.Environment;
 import cpw.mods.modlauncher.Launcher;
@@ -87,6 +85,11 @@ public class JCPlugin implements ITransformationService {
 		} catch (Exception e) {
 			JCLogger.log.error(e);
 		}
+	}
+
+	@Override
+	public void beginScanning(IEnvironment environment) {
+
 	}
 
 	// adapted from org.spongepowered.asm.launch.platform.MixinPlatformAgentMinecraftForge, part of Mixin

@@ -9,9 +9,9 @@ on:
         required: true
         default: false
       publish-edition:
-        description: 'Edition to publish (Forge-1.19.3 or Fabric-1.19.3)'
+        description: 'Edition to publish (Forge-1.16.5 or Fabric-1.19.3)'
         required: false
-        default: 'Forge-1.19.3'
+        default: 'Forge-1.16.5'
 
 jobs:
   build:

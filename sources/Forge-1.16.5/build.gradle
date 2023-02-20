@@ -17,16 +17,16 @@ apply plugin: 'net.minecraftforge.gradle'
 
 archivesBaseName = "${rootProject.name}"
 
-version = "1.17.x-1.19.x-${version}-Forge"
+version = "1.16.x-1.19.x-${version}-Forge"
 
 minecraft {
-    mappings channel: 'official', version: "1.19.3"
+    mappings channel: 'official', version: '1.16.5'
 
     runs {
         client {
             workingDirectory file('./run')
             property 'forge.logging.markers', 'REGISTRIES'
-            ideaModule "JCPlugin.Forge-1.19.3.main"
+            ideaModule "JCPlugin.Forge-1.16.5.main"
             property 'forge.logging.console.level', 'debug'
             mods {
                 "${rootProject.name}" {
@@ -39,7 +39,7 @@ minecraft {
         server {
             workingDirectory file('./run')
             property 'forge.logging.markers', 'REGISTRIES'
-            ideaModule "JCPlugin.Forge-1.19.3.main"
+            ideaModule "JCPlugin.Forge-1.16.5.main"
             property 'forge.logging.console.level', 'debug'
             mods {
                 "${rootProject.name}" {
@@ -53,7 +53,7 @@ minecraft {
 }
 
 dependencies {
-    minecraft "net.minecraftforge:forge:1.19.3-44.1.16"
+    minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
     implementation project(":Core")
 }
 
@@ -93,6 +93,7 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
         mainFile.addGameVersion('1.19.2')
         mainFile.addGameVersion('1.18.2')
         mainFile.addGameVersion('1.17.1')
+        mainFile.addGameVersion('1.16.5')
     }
 }
 

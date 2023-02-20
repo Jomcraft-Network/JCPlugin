@@ -4,7 +4,7 @@ JCPlugin [![JCPlugin](https://github.com/Jomcraft-Network/JCPlugin/actions/workf
 JCPlugin is a Core Plugin Loader for the DefaultSettings Forge mod, created by the Jomcraft Network development team. Official downloads and further information can be found on our [curseforge page](https://www.curseforge.com/minecraft/mc-mods/jcplugin).
 
 ## Usage
-Simply add this to your build.gradle (Forge 1.17.x - 1.19.x) or your dependencies block once you added Cursemaven:
+Simply add this to your build.gradle (Forge 1.16.x - 1.19.x) or your dependencies block once you added Cursemaven:
 
 ```md
 dependencies {
