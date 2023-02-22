@@ -29,7 +29,6 @@ public class JCCorePlugin implements IFMLLoadingPlugin {
                 String gameDir = aa.get("--gameDir");
 
                 FileUtilNoMC.mcDataDir = new File(gameDir);
-
                 if (!FMLLaunchHandler.isDeobfuscatedEnvironment()) {
                     File mods = new File(FileUtilNoMC.mcDataDir, "mods");
 
