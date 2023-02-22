@@ -5,6 +5,8 @@ plugins {
 
 archivesBaseName = "${rootProject.name}"
 
+ext.replace_version(version)
+
 version = "1.16.x-1.19.x-${version}-Fabric"
 
 dependencies {

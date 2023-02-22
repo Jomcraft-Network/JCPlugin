@@ -1,12 +1,10 @@
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
-        maven { url = 'https://repo.spongepowered.org/maven' }
         mavenCentral()
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
     }
 }
 
@@ -14,15 +12,14 @@ plugins {
     id 'net.darkhax.curseforgegradle' version '1.0.11'
 }
 
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'org.spongepowered.mixin'
 apply plugin: 'java'
+apply plugin: 'net.minecraftforge.gradle'
 
 archivesBaseName = "${rootProject.name}"
 
 ext.replace_version(version)
 
-version = "1.16.x-${version}-Forge"
+version = "1.17.x-1.19.x-${version}-Forge"
 
 minecraft {
     mappings channel: 'official', version: '1.16.5'
@@ -31,12 +28,8 @@ minecraft {
         client {
             workingDirectory file('./run')
             property 'forge.logging.markers', 'REGISTRIES'
-            ideaModule "JCPlugin.Forge-1.16.5.main"
+            ideaModule "JCPlugin.Forge-1.17.1.main"
             property 'forge.logging.console.level', 'debug'
-
-            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config="+"jcplugin.mixin.json"
-
             mods {
                 "${rootProject.name}" {
                     source sourceSets.main
@@ -48,13 +41,8 @@ minecraft {
         server {
             workingDirectory file('./run')
             property 'forge.logging.markers', 'REGISTRIES'
-            ideaModule "JCPlugin.Forge-1.16.5.main"
+            ideaModule "JCPlugin.Forge-1.17.1.main"
             property 'forge.logging.console.level', 'debug'
-
-            properties 'mixin.env.remapRefMap': 'true'
-            property 'mixin.env.refMapRemappingFile', "${project.projectDir}/build/createSrgToMcp/output.srg"
-            arg "-mixin.config="+"jcplugin.mixin.json"
-
             mods {
                 "${rootProject.name}" {
                     source sourceSets.main
@@ -66,14 +54,8 @@ minecraft {
     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 }
 
-mixin {
-    add sourceSets.main, "jcplugin.refmap.json"
-}
-
 dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.39'
-    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
-    testAnnotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation project(":Core")
 }
 
@@ -90,16 +72,6 @@ dependencies {
         exclude 'META-INF/mods.toml'
     }
 }*/
-
-jar {
-
-    manifest {
-        attributes([
-                "MixinConfigs" : "jcplugin.mixin.json"
-        ])
-    }
-
-}
 
 tasks.withType(JavaCompile) {
     source(project(":Core").sourceSets.main.allSource)
@@ -126,8 +98,12 @@ task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge)
         mainFile.changelogType = 'html'
         mainFile.changelog = file('../../changelog.html')
         mainFile.addModLoader('Forge')
-        mainFile.addJavaVersion('Java 8')
-        mainFile.addGameVersion('1.16.5')
+        mainFile.addJavaVersion('Java 16')
+        mainFile.addJavaVersion('Java 17')
+        mainFile.addGameVersion('1.19.3')
+        mainFile.addGameVersion('1.19.2')
+        mainFile.addGameVersion('1.18.2')
+        mainFile.addGameVersion('1.17.1')
 
         def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
         sourcesFile.changelog = file('../../changelog.html')

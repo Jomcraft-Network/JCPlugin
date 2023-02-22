@@ -63,10 +63,12 @@ subprojects {
     }
 
     processResources {
-        inputs.property "version", project.version
+        project.ext.replace_version = (String replace) -> {
+            inputs.property "version", replace
 
-        filesMatching(["**/fabric.mod.json", "**/mods.toml"]) {
-            expand "version": project.version
+            filesMatching(["**/fabric.mod.json", "**/mods.toml"]) {
+                expand "version": replace
+            }
         }
     }
 
