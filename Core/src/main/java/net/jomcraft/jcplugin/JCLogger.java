@@ -6,6 +6,6 @@ import org.apache.logging.log4j.Logger;
 public class JCLogger {
 
     public static final Logger log = LogManager.getLogger("JCPlugin Launcher");
-    public static final String version = "2.8.7";
+    public static final String version = JCLogger.class.getPackage().getImplementationVersion();
 
 }

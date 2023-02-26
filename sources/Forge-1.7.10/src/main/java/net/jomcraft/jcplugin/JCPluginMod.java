@@ -8,7 +8,7 @@ public class JCPluginMod {
 
     public static final String MODID = "jcplugin";
     public static final String NAME = "JCPlugin";
-    public static final String VERSION = "2.8.7";
+    public static final String VERSION = JCPluginMod.class.getPackage().getImplementationVersion();
 
     public JCPluginMod() {
         instance = this;
