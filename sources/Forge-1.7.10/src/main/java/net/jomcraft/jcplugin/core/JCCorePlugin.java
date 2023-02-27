@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import net.jomcraft.jcplugin.ComparableVersion;
 import net.jomcraft.jcplugin.FileUtilNoMC;
 import net.jomcraft.jcplugin.JCLogger;
 import net.jomcraft.jcplugin.JCPlugin;
@@ -26,8 +27,8 @@ public class JCCorePlugin implements IFMLLoadingPlugin {
 
         try {
             if (FMLLaunchHandler.side().name().equals("CLIENT")) {
-                Map<String, String> aa = (Map<String, String>) Launch.blackboard.get("launchArgs");
-                String gameDir = aa.get("--gameDir");
+                Map<String, String> launchArgsList = (Map<String, String>) Launch.blackboard.get("launchArgs");
+                String gameDir = launchArgsList.get("--gameDir");
 
                 FileUtilNoMC.mcDataDir = new File(gameDir);
 
@@ -46,13 +47,20 @@ public class JCCorePlugin implements IFMLLoadingPlugin {
                             if (toml != null) {
 
                                 BufferedReader result = new BufferedReader(new InputStreamReader(jar.getInputStream(toml)));
-
+                                boolean containsDefaultSettings = false;
                                 String readerLine;
+                                boolean versionsMatch = false;
                                 while ((readerLine = result.readLine()) != null) {
                                     if (readerLine.contains("\"modid\": \"defaultsettings\"")) {
-                                        JCPlugin.checksSuccessful = true;
-                                        break;
+                                        containsDefaultSettings = true;
+                                    } else if (readerLine.contains("\"version\": ")) {
+                                        String version = readerLine.split("\"")[3];
+                                        versionsMatch = JCLogger.isEqualOrNewer(new ComparableVersion(version));
                                     }
+                                }
+
+                                if(containsDefaultSettings && versionsMatch) {
+                                    JCPlugin.checksSuccessful = true;
                                 }
 
                                 result.close();

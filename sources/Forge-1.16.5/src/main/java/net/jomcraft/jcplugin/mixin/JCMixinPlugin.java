@@ -4,6 +4,7 @@ import cpw.mods.modlauncher.Environment;
 import cpw.mods.modlauncher.Launcher;
 import cpw.mods.modlauncher.api.IEnvironment;
 import cpw.mods.modlauncher.api.ILaunchHandlerService;
+import net.jomcraft.jcplugin.ComparableVersion;
 import net.jomcraft.jcplugin.FileUtilNoMC;
 import net.jomcraft.jcplugin.JCLogger;
 import net.jomcraft.jcplugin.JCPlugin;
@@ -48,12 +49,20 @@ public class JCMixinPlugin implements IMixinConfigPlugin {
 
                                 BufferedReader result = new BufferedReader(new InputStreamReader(jar.getInputStream(toml)));
 
+                                boolean containsDefaultSettings = false;
                                 String readerLine;
+                                boolean versionsMatch = false;
                                 while ((readerLine = result.readLine()) != null) {
                                     if (readerLine.contains("modId=\"defaultsettings\"")) {
-                                        JCPlugin.checksSuccessful = true;
-                                        break;
+                                        containsDefaultSettings = true;
+                                    } else if (readerLine.contains("version=")) {
+                                        String version = readerLine.split("\"")[1];
+                                        versionsMatch = JCLogger.isEqualOrNewer(new ComparableVersion(version));
                                     }
+                                }
+
+                                if(containsDefaultSettings && versionsMatch) {
+                                    JCPlugin.checksSuccessful = true;
                                 }
 
                                 result.close();
