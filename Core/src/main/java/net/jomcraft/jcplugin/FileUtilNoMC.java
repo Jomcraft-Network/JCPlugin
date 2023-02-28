@@ -45,15 +45,12 @@ public class FileUtilNoMC {
     public static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     public static MainJSON mainJson;
     public static PrivateJSON privateJson;
-    public static IgnoreJSON ignoreJson;
-    public volatile static Thread registryChecker;
     public volatile static boolean options_exists = false;
     public volatile static boolean keys_exists = false;
     public static ArrayList<String> deleted = new ArrayList<String>();
     public volatile static boolean servers_exists = false;
     public static String activeProfile = "Default";
     public static boolean otherCreator = false;
-    public static boolean firstBootUp;
     public static final FileFilter fileFilterModular = new FileFilter() {
 
         @Override
@@ -94,29 +91,6 @@ public class FileUtilNoMC {
         return storeFolder;
     }
 
-    @SuppressWarnings("unused")
-    public static void switchState(Byte state, String query) {
-
-        FileFilter ff = null;
-        if (!query.isEmpty()) {
-            ff = new FileFilter() {
-
-                @Override
-                public boolean accept(File file) {
-
-                    if (!file.getName().equals("defaultsettings") && !file.getName().equals("defaultsettings.json") && !file.getName().equals("ds_dont_export.json") && !file.getName().equals("keys.txt") && !file.getName().equals("options.txt") && !file.getName().equals("optionsof.txt") && !file.getName().equals("optionsshaders.txt") && !file.getName().equals("servers.dat") && !new File(FileUtilNoMC.getMainFolder(), "sharedConfigs/" + file.getName()).exists() && file.getName().toLowerCase().startsWith(query.toLowerCase()))
-                        return true;
-
-                    return false;
-                }
-            };
-        } else {
-            ff = FileUtilNoMC.fileFilter;
-        }
-
-        mainJson.save();
-    }
-
     public static void setActive(String name, boolean active) {
         mainJson.save();
     }
@@ -136,27 +110,6 @@ public class FileUtilNoMC {
         }
 
         mainJson.save();
-    }
-
-    public static IgnoreJSON getSharedIgnore(File location) {
-
-        if (ignoreJson != null) return ignoreJson;
-
-        if (location.exists()) {
-            try (Reader reader = new FileReader(location)) {
-                ignoreJson = gson.fromJson(reader, IgnoreJSON.class);
-                ignoreJson.location = location;
-
-            } catch (Exception e) {
-                JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
-            }
-
-        } else {
-
-            ignoreJson = new IgnoreJSON(location);
-            ignoreJson.save();
-        }
-        return ignoreJson;
     }
 
     public static PrivateJSON getPrivateJSON() {
@@ -215,13 +168,14 @@ public class FileUtilNoMC {
         return mainJson;
     }
 
-    public static void setPopup(boolean active) {
-        mainJson.save();
-    }
-
     public static void restoreContentsFirst() throws NullPointerException, IOException, NoSuchAlgorithmException {
 
         new File(mcDataDir, "config").mkdir();
+        boolean init = false;
+        final File privateFile = new File(mcDataDir, "ds_private_storage.json");
+        if (!privateFile.exists()) {
+            init = true;
+        }
 
         initialSetupJSON();
 
@@ -254,10 +208,10 @@ public class FileUtilNoMC {
 
         activeProfile = privateJson.currentProfile;
 
-        final File options = new File(mcDataDir, "options.txt");
-        firstBootUp = !options.exists();
-        if (firstBootUp) {
+        if (privateJson.firstBootUp && !init) {
             restoreConfigs();
+            privateJson.firstBootUp = false;
+            privateJson.save();
         } else if (switchProf) {
             restoreConfigs();
             mainJson.save();
@@ -415,7 +369,6 @@ public class FileUtilNoMC {
 
         File shared = new File(getMainFolder(), "sharedConfigs");
         shared.mkdir();
-        getSharedIgnore(new File(shared, "ignore.json"));
     }
 
     public static void copyAndHashPrivate(boolean options, boolean configs) throws NullPointerException, IOException {
@@ -820,10 +773,6 @@ public class FileUtilNoMC {
         return serversFile.exists();
     }
 
-    public static String getUUID(String uuid) throws NoSuchAlgorithmException {
-        return stringToHash(uuid);
-    }
-
     public static String stringToHash(String string) throws NoSuchAlgorithmException {
         return DigestUtils.md5Hex(string).toUpperCase();
     }
@@ -939,23 +888,4 @@ public class FileUtilNoMC {
             add("keys.txt");
         }
     };
-
-    public static class IgnoreJSON {
-
-        public static transient final long serialVersionUID = 2349872L;
-        public ArrayList<String> ignore = new ArrayList<String>();
-        public transient File location;
-
-        public IgnoreJSON(File location) {
-            this.location = location;
-        }
-
-        public void save() {
-            try (FileWriter writer = new FileWriter(this.location)) {
-                FileUtilNoMC.gson.toJson(this, writer);
-            } catch (IOException e) {
-                JCLogger.log.log(Level.ERROR, "Exception at processing startup: ", e);
-            }
-        }
-    }
 }
