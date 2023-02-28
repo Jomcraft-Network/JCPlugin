@@ -208,7 +208,12 @@ public class FileUtilNoMC {
 
         activeProfile = privateJson.currentProfile;
 
-        if (privateJson.firstBootUp && !init) {
+        if(!init) {
+            privateJson.firstBootUp = false;
+            privateJson.save();
+        }
+
+        if (privateJson.firstBootUp && init) {
             restoreConfigs();
             privateJson.firstBootUp = false;
             privateJson.save();
