@@ -33,6 +33,7 @@ import java.util.zip.ZipOutputStream;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.logging.log4j.Level;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
@@ -847,23 +848,37 @@ public class FileUtilNoMC {
         return files;
     }
 
-    public static void checkMD5(boolean updateExisting, boolean configs, String file) throws FileNotFoundException, IOException {
-        Collection<File> config = null;
+    public static void checkMD5(boolean updateExisting, boolean configs, String file) throws IOException {
+        ArrayList<File> fileList = null;
         File dir = new File(getMainFolder(), activeProfile);
+
         if (file == null) {
-            config = FileUtils.listFilesAndDirs(dir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+            fileList = new ArrayList<>(FileUtils.listFilesAndDirs(dir, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
         } else {
             File directory = new File(dir, file);
-            if (directory.isDirectory()) {
-                config = FileUtils.listFilesAndDirs(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE);
+            if(!directory.exists()){
+                FileFilter fileWildcard = new WildcardFileFilter(file);
+                File[] locs = dir.listFiles(fileWildcard);
+                fileList = new ArrayList<File>();
+                for(File loc : locs){
+                    if(loc.isDirectory()){
+                        for(File f : FileUtils.listFilesAndDirs(loc, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE)){
+                            fileList.add(f);
+                        }
+                    } else {
+                        fileList.add(loc);
+                    }
+                }
+            } else if (directory.isDirectory()) {
+                fileList = new ArrayList<>(FileUtils.listFilesAndDirs(directory, TrueFileFilter.INSTANCE, TrueFileFilter.INSTANCE));
             } else {
                 ArrayList<File> files = new ArrayList<File>();
                 files.add(directory);
-                config = files.stream().collect(Collectors.toList());
+                fileList = files;
             }
         }
 
-        for (File configFile : config) {
+        for (File configFile : fileList) {
             if (!configFile.isDirectory() && !configFile.getName().equals("ignore.json") && !configFile.getName().contains("defaultsettings")) {
                 if (optUse.contains(configFile.getName()) && configs) continue;
                 String relativePath = configFile.getPath().substring((mcDataDir.getPath().length()));

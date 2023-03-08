@@ -8,9 +8,11 @@ Simply add this to your build.gradle (Forge 1.16.x - 1.19.x) or your dependencie
 
 ```md
 dependencies {
-    implementation fg.deobf("curse.maven:jcp-659192:3951271")
+    implementation fg.deobf("curse.maven:jcp-659192:[file-id]")
 }
 ```
+
+Replace `[file-id]` with the curseforge ID of the file you need.
 
 ## License
 This project is licensed under the **Apache License Version 2.0** license. We do not grant any type of warranty.

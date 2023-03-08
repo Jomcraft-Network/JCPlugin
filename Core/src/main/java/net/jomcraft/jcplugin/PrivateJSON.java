@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Level;
 
 public class PrivateJSON {
 
+	public String information = "This file is part of the internal structure of the DefaultSettings mod. Do NOT edit it! If you are a modpack creator, also do not include it in your pack export! This will break the mod!";
 	public static transient final long serialVersionUID = 498123L;
 	public HashMap<String, String> currentHash = new HashMap<String, String>();
 	public String targetProfile = "!NEW!";
