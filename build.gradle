@@ -1,120 +1,115 @@
-buildscript {
+apply plugin: "idea"
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "idea"
+
+    project.version = "4.0.3"
+
+    if (!project.hasProperty('javaVersion') || project.property('javaVersion') == "8") {
+
+        java.toolchain {
+            project.logger.lifecycle("{}: configuring Java 8 toolchain", project.displayName)
+            languageVersion = JavaLanguageVersion.of(8)
+        }
+
+        it.sourceCompatibility = 1.8
+        it.targetCompatibility = 1.8
+        tasks.withType(JavaCompile).configureEach {
+            project.logger.lifecycle("{}: setting source/target compatibility to Java 8 on task {}", project.displayName, it.name)
+            sourceCompatibility = 1.8
+            targetCompatibility = 1.8
+        }
+    } else if (project.hasProperty('javaVersion')) {
+
+        int ver = project.property('javaVersion') as int
+
+        it.sourceCompatibility = 1.8
+        it.targetCompatibility = 1.8
+
+        java.toolchain {
+            project.logger.lifecycle("{}: configuring Java {} toolchain", project.displayName, ver)
+            languageVersion = JavaLanguageVersion.of(ver)
+        }
+
+        tasks.withType(JavaCompile).configureEach {
+            sourceCompatibility = 1.8
+            targetCompatibility = 1.8
+            project.logger.lifecycle("{}: setting release to {} on task {}", project.displayName, ver, it.name)
+            options.release = ver
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        it.options.encoding = "UTF-8"
+    }
+
+    //tasks.withType(GenerateModuleMetadata) {
+    //	enabled = false //probably broken
+    //}
+
+    jar {
+        manifest {
+            attributes([
+                    "Specification-Title"     : "JCPlugin",
+                    "Specification-Vendor"    : "Jomcraft Network",
+                    "Specification-Version"   : project.version,
+                    "Implementation-Title"    : "JCPlugin",
+                    "Implementation-Version"  : project.version,
+                    "Implementation-Vendor"   : "Jomcraft Network",
+                    "Implementation-Timestamp": new Date().format("yyyy-MM-dd HH:mm:ssZ")
+            ])
+        }
+    }
+
+    processResources {
+        project.ext.replace_version = (String replace) -> {
+            inputs.property "version", replace
+
+            filesMatching(["**/fabric.mod.json", "**/mods.toml"]) {
+                expand "version": replace
+            }
+        }
+    }
+
     repositories {
-        maven { url = 'https://maven.minecraftforge.net' }
-        mavenCentral()
+        maven {
+            url = "https://repo.spongepowered.org/repository/maven-public/"
+            content {
+                includeGroup "org.spongepowered"
+            }
+        }
+
+        mavenCentral({
+            content {
+                includeGroup("org.jetbrains")
+            }
+        })
     }
+
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
+        implementation "org.jetbrains:annotations:16.0.2"
     }
 }
 
-plugins {
-    id 'com.matthewprenger.cursegradle' version '1.4.0'
-}
-
-apply plugin: 'net.minecraftforge.gradle'
-apply plugin: 'eclipse'
-
-version = "1.18.x-1.19.x-2.8.7"
-
-def fileVersion = "2.8.7"
-group = "net.jomcraft.jcplugin"
-
-archivesBaseName = "JCPlugin"
-
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-
-minecraft {
-    mappings channel: 'official', version: '1.19.1'
-
-	runs {
-        client {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                jcplugin {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        server {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            mods {
-                jcplugin {
-                    source sourceSets.main
-                }
-            }
-        }
-
-        data {
-            workingDirectory project.file('run')
-
-            property 'forge.logging.markers', 'REGISTRIES'
-
-            property 'forge.logging.console.level', 'debug'
-
-            args '--mod', 'jcplugin', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
-
-            mods {
-                jcplugin {
-                    source sourceSets.main
+/*task("copyRelease") {
+    subprojects {
+        dependsOn project.name + ":build"
+    }
+    doFirst {
+        println "Gathering builds"
+        copy {
+            subprojects {
+                if (project.name != "Core") {
+                    def libDir = project.projectDir.toPath().resolve("build/libs")
+                    from(libDir) {
+                        include "*.jar"
+                        exclude "*-dev.jar", "*-sources.jar"
+                    }
+                    into "build/libs/"
+                    duplicatesStrategy DuplicatesStrategy.INCLUDE
                 }
             }
         }
     }
-    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
-}
-
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
-dependencies {
-    minecraft 'net.minecraftforge:forge:1.19.1-42.0.0'
-}
-
-processResources {
-
-	duplicatesStrategy = 'include'
-}
-
-jar {
-	manifest {
-		attributes([
-			"Specification-Title": "JCPlugin",
-			"Specification-Vendor": "Jomcraft Network",
-			"Specification-Version": fileVersion,
-			"Implementation-Title": "JCPlugin",
-			"Implementation-Version": fileVersion,
-			"Implementation-Vendor" : "Jomcraft Network",
-			"Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
-		])
-	}
-}
-
-task sourcesJar(type: Jar) {
-	from sourceSets.main.allSource
-	classifier = 'sources'
-}
-
-task deobfJar(type: Jar) {
-	from sourceSets.main.output
-	classifier = 'deobf'
-}
-
-artifacts {
-	archives jar
-	archives sourcesJar
-	archives deobfJar
-}
-
-jar.finalizedBy('reobfJar')
+}*/

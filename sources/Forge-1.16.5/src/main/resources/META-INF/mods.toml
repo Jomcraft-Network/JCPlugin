@@ -1,0 +1,26 @@
+modLoader="javafml"
+loaderVersion="[36,)"
+license="Apache License 2.0"
+
+[[mods]] 
+	modId="jcplugin" 
+	version="${version}"
+	displayName="JCPlugin"
+	description='''JCPlugin Mod by JomcraftNetwork for DefaultSettings on Fabric'''
+	side="CLIENT"
+	authors="PT400C - Jomcraft Network"
+	credits="Developed by Jomcraft Network"
+
+[[dependencies.jcplugin]]
+    modId="forge"
+    mandatory=true
+    versionRange="[36.2.0,)"
+    ordering="NONE"
+    side="BOTH"
+    
+[[dependencies.jcplugin]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.16,1.17]"
+    ordering="NONE"
+    side="BOTH"

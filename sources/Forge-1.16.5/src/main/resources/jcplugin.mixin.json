@@ -1,0 +1,15 @@
+{
+  "package": "net.jomcraft.jcplugin.mixin",
+  "required": true,
+  "minVersion": "0.8.0",
+  "compatibilityLevel": "JAVA_8",
+  "plugin": "net.jomcraft.jcplugin.mixin.JCMixinPlugin",
+  "refmap": "jcplugin.refmap.json",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "conformVisibility": true
+  },
+  "client": []
+}
