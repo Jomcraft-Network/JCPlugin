@@ -15,6 +15,7 @@ public class PrivateJSON {
 	public String currentProfile = "!NEW!";
 	public String privateIdentifier = null;
 	public boolean firstBootUp = true;
+	public boolean disableCreatorCheck = false;
 
 	public void save() {
 		try (FileWriter writer = new FileWriter(new File(FileUtilNoMC.mcDataDir, "ds_private_storage.json"))) {
