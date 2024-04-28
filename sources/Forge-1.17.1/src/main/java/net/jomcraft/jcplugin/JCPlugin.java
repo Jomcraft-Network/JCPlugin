@@ -75,6 +75,31 @@ public class JCPlugin implements ITransformationService {
 								}
 
 								result.close();
+							} else {
+								toml = jar.getEntry("META-INF/neoforge.mods.toml");
+
+								if (toml != null) {
+
+									BufferedReader result = new BufferedReader(new InputStreamReader(jar.getInputStream(toml)));
+
+									boolean containsDefaultSettings = false;
+									String readerLine;
+									boolean versionsMatch = false;
+									while ((readerLine = result.readLine()) != null) {
+										if (readerLine.contains("modId=\"defaultsettings\"")) {
+											containsDefaultSettings = true;
+										} else if (readerLine.contains("version=")) {
+											String version = readerLine.split("\"")[1];
+											versionsMatch = JCLogger.isEqualOrNewer(new ComparableVersion(version));
+										}
+									}
+
+									if(containsDefaultSettings && versionsMatch) {
+										JCPlugin.checksSuccessful = true;
+									}
+
+									result.close();
+								}
 							}
 
 							jar.close();
