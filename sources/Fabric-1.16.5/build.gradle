@@ -54,7 +54,7 @@ loom {
 
 task sourcesJar(type: Jar) {
 	from sourceSets.main.allSource
-	classifier = 'sources'
+    archiveClassifier = 'sources'
 }
 
 artifacts {
