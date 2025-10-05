@@ -1,0 +1,117 @@
+plugins {
+    id 'java-library'
+    id 'net.darkhax.curseforgegradle' version '1.0.11'
+	id 'net.neoforged.gradle.userdev' version '7.0.192'
+}
+
+
+archivesBaseName = "${rootProject.name}"
+
+//minecraft.accessTransformers.file rootProject.file('src/main/resources/META-INF/accesstransformer.cfg')
+
+ext.replace_version(version)
+
+version = "1.21.9-${version}-NeoForge"
+
+runs {
+        client {
+            workingDirectory file('./run')
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+   
+            modSource project.sourceSets.main
+            modSource project(":Core").sourceSets.main
+        }
+
+        server {
+            workingDirectory file('./run')
+            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperty 'forge.logging.console.level', 'debug'
+     
+            modSource project.sourceSets.main
+            modSource project(":Core").sourceSets.main
+        }
+}
+
+dependencies {
+    implementation "net.neoforged:neoforge:21.9.14-beta"
+    implementation project(":Core")
+}
+
+/*processResources {
+    duplicatesStrategy = 'include'
+
+    from(sourceSets.main.resources.srcDirs) {
+        include 'META-INF/mods.toml'
+
+        //	expand 'forge_version': forge_version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'META-INF/mods.toml'
+    }
+}*/
+
+tasks.withType(JavaCompile) {
+    source(project(":Core").sourceSets.main.allSource)
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    archiveClassifier = 'sources'
+}
+
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+artifacts {
+    archives jar
+    archives sourcesJar
+}
+
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+    if (System.getenv("CURSE_API") != null && !System.getenv("CURSE_API").equals("")) {
+        disableVersionDetection()
+        apiToken = System.getenv("CURSE_API")
+
+        def mainFile = upload(659192, jar)
+        mainFile.releaseType = project.ext.relType
+        mainFile.displayName = "$archivesBaseName-$version"
+        mainFile.changelogType = 'html'
+        mainFile.changelog = file('../../changelog.html')
+        mainFile.addModLoader('Forge')
+        mainFile.addJavaVersion('Java 16')
+        mainFile.addJavaVersion('Java 17')
+        mainFile.addGameVersion('1.20')
+        mainFile.addGameVersion('1.19.4')
+        mainFile.addGameVersion('1.19.3')
+        mainFile.addGameVersion('1.19.2')
+        mainFile.addGameVersion('1.18.2')
+        mainFile.addGameVersion('1.17.1')
+
+        def sourcesFile = mainFile.withAdditionalFile(sourcesJar)
+        sourcesFile.changelog = file('../../changelog.html')
+        sourcesFile.displayName = "$archivesBaseName-$version-sources"
+    }
+}
+
+task("copyRelease") {
+    dependsOn "build"
+
+    doFirst {
+        println "Gathering builds"
+        copy {
+            def libDir = project.projectDir.toPath().resolve("build/libs")
+            from(libDir) {
+                include "*.jar"
+                exclude "*-dev.jar"
+            }
+            into "../../build/libs/"
+            duplicatesStrategy DuplicatesStrategy.INCLUDE
+        }
+    }
+}
